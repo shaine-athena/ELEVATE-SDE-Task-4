@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CredVault - Certificate Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="logo" onclick="showPage('home')">🛡️ CredVault</div>
+    <div class="nav-links" id="public-nav">
+      <button onclick="showPage('request')">Request</button>
+      <button onclick="showPage('track')">Track</button>
+      <button onclick="showPage('verify')">Verify</button>
+      <button class="admin-btn" onclick="showPage('admin-login')">Admin Login</button>
+    </div>
+    <div class="nav-links hidden" id="admin-nav">
+      <button onclick="showPage('admin-applications')">Applications</button>
+      <button onclick="showPage('admin-certificates')">Certificates</button>
+      <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- 1. HOME PAGE (/) -->
+  <section id="page-home" class="page active">
+    <div class="hero">
+      <h1>CredVault</h1>
+      <p>Certificate Issuing &amp; Verification Platform</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="showPage('request')">Request Certificate</button>
+        <button class="btn-secondary" onclick="showPage('track')">Track Application</button>
+        <button class="btn-secondary" onclick="showPage('verify')">Verify Certificate</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. REQUEST CERTIFICATE PAGE (/request) -->
+  <section id="page-request" class="page">
+    <div class="card">
+      <h2>Request Certificate</h2>
+      <div id="request-success" class="alert success hidden"></div>
+
+      <form id="request-form" onsubmit="submitRequest(event)">
+        <label>Name</label>
+        <input type="text" id="req-name" required placeholder="Enter full name" />
+
+        <label>Phone</label>
+        <input type="tel" id="req-phone" required placeholder="10-digit phone number" />
+
+        <label>Gender</label>
+        <div class="radio-group">
+          <label><input type="radio" name="gender" value="Male" checked /> Male</label>
+          <label><input type="radio" name="gender" value="Female" /> Female</label>
+          <label><input type="radio" name="gender" value="Other" /> Other</label>
+        </div>
+
+        <label>City</label>
+        <input type="text" id="req-city" required placeholder="Enter your city" />
+
+        <label>State</label>
+        <select id="req-state" required>
+          <option value="">Select State</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="West Bengal">West Bengal</option>
+        </select>
+
+        <button type="submit" class="btn-primary full-width">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 3. TRACK APPLICATION PAGE (/track) -->
+  <section id="page-track" class="page">
+    <div class="card">
+      <h2>Track Application</h2>
+      <form onsubmit="trackApplication(event)" class="search-row">
+        <input type="text" id="track-input" required placeholder="Enter Application ID (e.g. APP-0001)" />
+        <button type="submit" class="btn-primary">Track</button>
+      </form>
+      <div id="track-result"></div>
+    </div>
+  </section>
+
+  <!-- 4. VERIFY CERTIFICATE PAGE (/verify) -->
+  <section id="page-verify" class="page">
+    <div class="card">
+      <h2>Verify Certificate</h2>
+      <form onsubmit="verifyCertificate(event)" class="search-row">
+        <input type="text" id="verify-input" required placeholder="Enter Certificate ID (e.g. CERT-0001)" />
+        <button type="submit" class="btn-primary">Verify</button>
+      </form>
+      <div id="verify-result"></div>
+    </div>
+  </section>
+
+  <!-- 5. ADMIN LOGIN PAGE (/admin/login) -->
+  <section id="page-admin-login" class="page">
+    <div class="card">
+      <h2>Admin Login</h2>
+      <div id="login-error" class="alert error hidden"></div>
+      <form onsubmit="handleAdminLogin(event)">
+        <label>Username</label>
+        <input type="text" id="admin-user" required placeholder="admin" />
+
+        <label>Password</label>
+        <input type="password" id="admin-pass" required placeholder="admin" />
+
+        <button type="submit" class="btn-primary full-width">Login</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 6. ADMIN APPLICATIONS PAGE (/admin/applications) -->
+  <section id="page-admin-applications" class="page">
+    <div class="table-container">
+      <h2>Applications</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Gender</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="applications-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 7. ADMIN CERTIFICATES PAGE (/admin/certificates) -->
+  <section id="page-admin-certificates" class="page">
+    <div class="table-container">
+      <h2>Certificates</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Certificate ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Issued On</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+          
+        </thead>
+        <tbody id="certificates-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
